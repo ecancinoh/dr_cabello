@@ -1,6 +1,7 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Reserva
-from pacientes.models import Paciente
+from usuarios.models import PerfilUsuario
 
 
 class ReservaForm(forms.ModelForm):
@@ -20,3 +21,14 @@ class ReservaForm(forms.ModelForm):
             'motivo_consulta': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Solo usuarios con rol DOCTOR en su perfil
+        doctores_ids = PerfilUsuario.objects.filter(
+            rol='DOCTOR', activo=True
+        ).values_list('user_id', flat=True)
+        self.fields['medico'].queryset = User.objects.filter(
+            id__in=doctores_ids
+        ).order_by('last_name', 'first_name')
+        self.fields['medico'].label_from_instance = lambda u: u.get_full_name() or u.username
