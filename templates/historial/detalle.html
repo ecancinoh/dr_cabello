@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Historial – Detalle{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-file-medical mr-2 text-primary"></i>Historial Clínico</h1>
+  <div>
+    <a href="{% url 'historial:editar' historial.pk %}" class="btn btn-warning btn-sm mr-1"><i class="fas fa-edit mr-1"></i> Editar</a>
+    <a href="{% url 'formulario_fuv:crear' %}?historial_id={{ historial.pk }}&paciente_id={{ historial.paciente.pk }}" class="btn btn-success btn-sm mr-1"><i class="fas fa-clipboard-check mr-1"></i> Crear FUV</a>
+    <a href="{% url 'historial:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Información General</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Paciente</th><td><a href="{% url 'pacientes:detalle' historial.paciente.pk %}">{{ historial.paciente.nombre_paciente }}</a></td></tr>
+          <tr><th>Fecha</th><td>{{ historial.fecha_consulta|date:"d/m/Y" }}</td></tr>
+          <tr><th>Médico</th><td>{{ historial.medico.get_full_name|default:"–" }}</td></tr>
+          <tr><th>Próxima cita</th><td>{{ historial.proxima_cita|date:"d/m/Y"|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Signos Vitales</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Peso</th><td>{{ historial.peso_kg|default:"–" }} kg</td></tr>
+          <tr><th>Talla</th><td>{{ historial.talla_cm|default:"–" }} cm</td></tr>
+          <tr><th>Temperatura</th><td>{{ historial.temperatura|default:"–" }} °C</td></tr>
+          <tr><th>Frec. Cardíaca</th><td>{{ historial.frecuencia_cardiaca|default:"–" }} lpm</td></tr>
+          <tr><th>Saturación O₂</th><td>{{ historial.saturacion_oxigeno|default:"–" }} %</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Evaluación Clínica</h6></div>
+      <div class="card-body">
+        <h6 class="text-primary">Motivo de Consulta</h6>
+        <p>{{ historial.motivo_consulta|linebreaksbr }}</p>
+        <hr>
+        <h6 class="text-primary">Anamnesis</h6>
+        <p>{{ historial.anamnesis|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Examen Físico</h6>
+        <p>{{ historial.examen_fisico|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Diagnóstico</h6>
+        <p>{{ historial.diagnostico|linebreaksbr }}</p>
+        <hr>
+        <h6 class="text-primary">Indicaciones</h6>
+        <p>{{ historial.indicaciones|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Receta / Medicamentos</h6>
+        <p>{{ historial.receta|linebreaksbr|default:"–" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

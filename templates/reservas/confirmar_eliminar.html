@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} – Dr. Cabello{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800 text-danger"><i class="fas fa-exclamation-triangle mr-2"></i>{{ titulo }}</h1>
+</div>
+<div class="card shadow border-left-danger mb-4">
+  <div class="card-body">
+    <p class="lead">¿Confirma cancelar esta reserva?</p>
+    <p class="text-muted"><strong>Reserva:</strong> {{ objeto }}</p>
+    <hr>
+    <form method="post">{% csrf_token %}
+      <button type="submit" class="btn btn-danger"><i class="fas fa-times-circle mr-1"></i> Confirmar Cancelación</button>
+      <a href="{% url 'reservas:lista' %}" class="btn btn-secondary ml-2">Volver</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Reservas – Dr. Cabello{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-calendar-alt mr-2 text-primary"></i>Reservas de Horas</h1>
+  <a href="{% url 'reservas:crear' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i> Nueva Reserva</a>
+</div>
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h6 class="m-0 font-weight-bold text-primary">Listado de Reservas</h6>
+    <form class="form-inline" method="get">
+      <input type="date" name="fecha" class="form-control form-control-sm mr-2" value="{{ fecha }}">
+      <input type="text" name="q" class="form-control form-control-sm mr-2" placeholder="Buscar paciente..." value="{{ q }}">
+      <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-search fa-sm"></i></button>
+    </form>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover table-sm mb-0">
+        <thead><tr><th>#</th><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Tipo</th><th>Médico</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+        {% for r in reservas %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ r.fecha|date:"d/m/Y" }}</td>
+          <td>{{ r.hora|time:"H:i" }}</td>
+          <td><a href="{% url 'pacientes:detalle' r.paciente.pk %}">{{ r.paciente.nombre_paciente }}</a></td>
+          <td><span class="badge badge-info">{{ r.get_tipo_consulta_display }}</span></td>
+          <td>{{ r.medico.get_full_name|default:"–" }}</td>
+          <td>
+            {% if r.estado == 'PENDIENTE' %}<span class="badge badge-warning">{{ r.get_estado_display }}</span>
+            {% elif r.estado == 'CONFIRMADA' %}<span class="badge badge-success">{{ r.get_estado_display }}</span>
+            {% elif r.estado == 'CANCELADA' %}<span class="badge badge-danger">{{ r.get_estado_display }}</span>
+            {% elif r.estado == 'ATENDIDA' %}<span class="badge badge-primary">{{ r.get_estado_display }}</span>
+            {% else %}<span class="badge badge-secondary">{{ r.get_estado_display }}</span>{% endif %}
+          </td>
+          <td>
+            <a href="{% url 'reservas:editar' r.pk %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+            <a href="{% url 'llegadas:registrar' %}?reserva_id={{ r.pk }}" class="btn btn-success btn-sm" title="Registrar llegada"><i class="fas fa-door-open"></i></a>
+            <a href="{% url 'reservas:eliminar' r.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-3">No se encontraron reservas.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

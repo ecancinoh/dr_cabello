@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}{{ paciente.nombre_paciente }} – Detalle{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800">
+    <i class="fas fa-child mr-2 text-primary"></i>{{ paciente.nombre_paciente }}
+  </h1>
+  <div>
+    <a href="{% url 'pacientes:editar' paciente.pk %}" class="btn btn-warning btn-sm mr-1">
+      <i class="fas fa-edit mr-1"></i> Editar
+    </a>
+    <a href="{% url 'reservas:crear' %}?paciente={{ paciente.pk }}" class="btn btn-success btn-sm mr-1">
+      <i class="fas fa-calendar-plus mr-1"></i> Nueva Reserva
+    </a>
+    <a href="{% url 'historial:crear' %}?paciente_id={{ paciente.pk }}" class="btn btn-primary btn-sm mr-1">
+      <i class="fas fa-file-medical mr-1"></i> Nuevo Historial
+    </a>
+    <a href="{% url 'pacientes:lista' %}" class="btn btn-secondary btn-sm">
+      <i class="fas fa-arrow-left mr-1"></i> Volver
+    </a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Identificación</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>RUT</th><td>{{ paciente.rut_completo }}</td></tr>
+          <tr><th>Nombre</th><td>{{ paciente.nombre_paciente }}</td></tr>
+          <tr><th>Nacimiento</th><td>{{ paciente.fecha_nacimiento|date:"d/m/Y"|default:"–" }}</td></tr>
+          <tr><th>Celular</th><td>{{ paciente.celular|default:"–" }}</td></tr>
+          <tr><th>Dirección</th><td>{{ paciente.direccion|default:"–" }}</td></tr>
+          <tr><th>Comuna</th><td>{{ paciente.get_comuna_display|default:"–" }}</td></tr>
+          <tr><th>Ciudad</th><td>{{ paciente.ciudad|default:"–" }}</td></tr>
+          <tr><th>Previsión</th><td>{{ paciente.get_prevision_display|default:"–" }}</td></tr>
+          <tr><th>Estado</th><td>
+            {% if paciente.activo %}<span class="badge badge-success">Activo</span>
+            {% else %}<span class="badge badge-secondary">Inactivo</span>{% endif %}
+          </td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Familia</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Mamá</th><td>{{ paciente.nombre_mama|default:"–" }}</td></tr>
+          <tr><th>Papá</th><td>{{ paciente.nombre_papa|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card shadow mt-3">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Datos al Nacer</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Parto</th><td>{{ paciente.get_parto_display|default:"–" }}</td></tr>
+          <tr><th>Peso</th><td>{{ paciente.peso_kg|default:"–" }} kg</td></tr>
+          <tr><th>Talla</th><td>{{ paciente.talla_cm|default:"–" }} cm</td></tr>
+          <tr><th>C.C.</th><td>{{ paciente.cc_cm|default:"–" }} cm</td></tr>
+          <tr><th>Apgar</th><td>{{ paciente.apgar|default:"–" }}</td></tr>
+          <tr><th>Edad Gest.</th><td>{{ paciente.edad_gestacional_semanas|default:"–" }} sem.</td></tr>
+          <tr><th>Grupo Sanguíneo</th><td>
+            {% if paciente.grupo_sanguineo_abo %}{{ paciente.grupo_sanguineo_abo }} {{ paciente.grupo_sanguineo_rh }}
+            {% else %}–{% endif %}
+          </td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Últimas Reservas</h6>
+        <a href="{% url 'reservas:lista' %}?q={{ paciente.rut_numero }}" class="btn btn-xs btn-primary btn-sm">Ver todas</a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Fecha</th><th>Estado</th></tr></thead>
+            <tbody>
+            {% for r in paciente.reservas.all|slice:":5" %}
+            <tr>
+              <td>{{ r.fecha|date:"d/m/Y" }}</td>
+              <td><span class="badge badge-info">{{ r.get_estado_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2" class="text-muted text-center">Sin reservas.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow mt-3">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Historial Clínico</h6>
+        <a href="{% url 'historial:lista' %}?paciente={{ paciente.pk }}" class="btn btn-xs btn-primary btn-sm">Ver todo</a>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Fecha</th><th>Diagnóstico</th></tr></thead>
+            <tbody>
+            {% for h in paciente.historial.all|slice:":5" %}
+            <tr>
+              <td>{{ h.fecha_consulta|date:"d/m/Y" }}</td>
+              <td>{{ h.diagnostico|truncatechars:30 }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2" class="text-muted text-center">Sin historial.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

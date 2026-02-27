@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}FUV – Detalle{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-check mr-2 text-primary"></i>Formulario FUV – Detalle</h1>
+  <div>
+    <a href="{% url 'formulario_fuv:editar' fuv.pk %}" class="btn btn-warning btn-sm mr-1"><i class="fas fa-edit mr-1"></i> Editar</a>
+    <a href="{% url 'formulario_fuv:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Información General</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Paciente</th><td><a href="{% url 'pacientes:detalle' fuv.paciente.pk %}">{{ fuv.paciente.nombre_paciente }}</a></td></tr>
+          <tr><th>RUT</th><td>{{ fuv.paciente.rut_completo }}</td></tr>
+          <tr><th>Fecha Evaluación</th><td>{{ fuv.fecha_evaluacion|date:"d/m/Y" }}</td></tr>
+          <tr><th>Prox. Control</th><td>{{ fuv.proxima_control|date:"d/m/Y"|default:"–" }}</td></tr>
+          <tr><th>Médico</th><td>{{ fuv.medico.get_full_name|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Antropometría</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Edad</th><td>{{ fuv.edad_meses|default:"–" }} meses</td></tr>
+          <tr><th>Peso</th><td>{{ fuv.peso_kg|default:"–" }} kg</td></tr>
+          <tr><th>Talla</th><td>{{ fuv.talla_cm|default:"–" }} cm</td></tr>
+          <tr><th>IMC</th><td>{{ fuv.imc|default:"–" }}</td></tr>
+          <tr><th>Perím. Cefálico</th><td>{{ fuv.perimetro_cefalico|default:"–" }} cm</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Desarrollo Psicomotor</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Resultado</th><td>
+            {% if fuv.dpm_resultado == 'NORMAL' %}<span class="badge badge-success">Normal</span>
+            {% elif fuv.dpm_resultado == 'RIESGO' %}<span class="badge badge-warning">Riesgo</span>
+            {% elif fuv.dpm_resultado == 'RETRASO' %}<span class="badge badge-danger">Retraso</span>
+            {% else %}–{% endif %}
+          </td></tr>
+          <tr><th>Observaciones</th><td>{{ fuv.dpm_observaciones|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Evaluación Completa</h6></div>
+      <div class="card-body">
+        <h6 class="text-primary">Alimentación</h6>
+        <p>
+          {% if fuv.lactancia_materna %}<span class="badge badge-success mr-1">Lactancia Materna</span>{% endif %}
+          {% if fuv.alimentacion_complementaria %}<span class="badge badge-info">Alimentación Complementaria</span>{% endif %}
+        </p>
+        <p>{{ fuv.alimentacion_observaciones|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Vacunas</h6>
+        {% if fuv.vacunas_al_dia %}<span class="badge badge-success">Al día</span>{% else %}<span class="badge badge-warning">Pendiente</span>{% endif %}
+        <p class="mt-2">{{ fuv.vacunas_observaciones|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Exámenes Solicitados</h6>
+        <p>{{ fuv.examenes_solicitados|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Resultados de Exámenes</h6>
+        <p>{{ fuv.examenes_resultados|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Diagnóstico</h6>
+        <p>{{ fuv.diagnostico|linebreaksbr }}</p>
+        <hr>
+        <h6 class="text-primary">Indicaciones</h6>
+        <p>{{ fuv.indicaciones|linebreaksbr|default:"–" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

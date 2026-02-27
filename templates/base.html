@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %}Dr. Cabello – Pediatría{% endblock %}</title>
+
+  <!-- Bootstrap 4 / SB Admin 2 via CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4e73df;
+      --success: #1cc88a;
+      --info:    #36b9cc;
+      --warning: #f6c23e;
+      --danger:  #e74a3b;
+    }
+    .sidebar { background: linear-gradient(180deg, #4e73df 10%, #224abe 100%); }
+    .sidebar-brand-text { font-size: 1rem; }
+    .nav-item .nav-link { color: rgba(255,255,255,.8); }
+    .nav-item .nav-link:hover { color: #fff; }
+    .sidebar-divider { border-top: 1px solid rgba(255,255,255,.15); }
+    .card-stats { border-left: 4px solid; }
+    .card-stats.border-primary { border-left-color: var(--primary) !important; }
+    .card-stats.border-success { border-left-color: var(--success) !important; }
+    .card-stats.border-info    { border-left-color: var(--info)    !important; }
+    .card-stats.border-warning { border-left-color: var(--warning) !important; }
+    .topbar-divider { width: 0; border-right: 1px solid #e3e6f0; height: 2rem; margin: auto 1rem; }
+    .table-responsive .table thead th { background-color: #4e73df; color: #fff; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .breadcrumb-item a { color: #4e73df; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body id="page-top">
+<div id="wrapper">
+
+  <!-- ======= SIDEBAR ======= -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'dashboard:index' %}">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="fas fa-heart"></i>
+      </div>
+      <div class="sidebar-brand-text mx-3">Dr. Cabello <sup>Ped</sup></div>
+    </a>
+    <hr class="sidebar-divider my-0">
+
+    <!-- Dashboard -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'dashboard' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'dashboard:index' %}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Gestión</div>
+
+    <!-- Pacientes -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'pacientes' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'pacientes:lista' %}">
+        <i class="fas fa-fw fa-child"></i>
+        <span>Pacientes</span>
+      </a>
+    </li>
+
+    <!-- Reservas -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'reservas' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'reservas:lista' %}">
+        <i class="fas fa-fw fa-calendar-alt"></i>
+        <span>Reservas de Horas</span>
+      </a>
+    </li>
+
+    <!-- Llegadas -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'llegadas' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'llegadas:lista' %}">
+        <i class="fas fa-fw fa-door-open"></i>
+        <span>Registro de Llegadas</span>
+      </a>
+    </li>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Clínico</div>
+
+    <!-- Historial -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'historial' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'historial:lista' %}">
+        <i class="fas fa-fw fa-file-medical"></i>
+        <span>Historial Pacientes</span>
+      </a>
+    </li>
+
+    <!-- Formulario FUV -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'formulario_fuv' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'formulario_fuv:lista' %}">
+        <i class="fas fa-fw fa-clipboard-check"></i>
+        <span>Formulario FUV</span>
+      </a>
+    </li>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Administración</div>
+
+    <!-- Usuarios -->
+    <li class="nav-item {% if request.resolver_match.namespace == 'usuarios' %}active{% endif %}">
+      <a class="nav-link" href="{% url 'usuarios:lista' %}">
+        <i class="fas fa-fw fa-users-cog"></i>
+        <span>Usuarios</span>
+      </a>
+    </li>
+
+    <hr class="sidebar-divider d-none d-md-block">
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+  </ul>
+  <!-- ======= END SIDEBAR ======= -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+
+      <!-- ======= TOPBAR ======= -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars"></i>
+        </button>
+
+        <!-- Search -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..." aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button"><i class="fas fa-search fa-sm"></i></button>
+            </div>
+          </div>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+          <div class="topbar-divider d-none d-sm-block"></div>
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                {{ request.user.get_full_name|default:request.user.username }}
+              </span>
+              <img class="img-profile rounded-circle"
+                   src="https://ui-avatars.com/api/?name={{ request.user.get_full_name|urlencode }}&background=4e73df&color=fff&size=40">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+              <a class="dropdown-item" href="{% url 'admin:index' %}">
+                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Admin Django
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'usuarios:logout' %}">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar Sesión
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- ======= END TOPBAR ======= -->
+
+      <!-- ======= PAGE CONTENT ======= -->
+      <div class="container-fluid">
+
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+      </div>
+      <!-- ======= END PAGE CONTENT ======= -->
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Dr. Cabello &mdash; Consulta Médica Pediátrica &copy; {% now "Y" %}</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<!-- Scroll to Top -->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- jQuery, Bootstrap, SB Admin 2 JS via CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/js/sb-admin-2.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

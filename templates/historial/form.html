@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} – Dr. Cabello{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-file-medical mr-2 text-primary"></i>{{ titulo }}</h1>
+  <a href="{% url 'historial:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+</div>
+<div class="card shadow mb-4">
+  <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Datos del Historial</h6></div>
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <!-- Cabecera -->
+      <div class="row">
+        <div class="col-md-4"><div class="form-group"><label>{{ form.paciente.label }}</label>{{ form.paciente }}</div></div>
+        <div class="col-md-4"><div class="form-group"><label>{{ form.reserva.label }}</label>{{ form.reserva }}</div></div>
+        <div class="col-md-2"><div class="form-group"><label>{{ form.fecha_consulta.label }}</label>{{ form.fecha_consulta }}</div></div>
+        <div class="col-md-2"><div class="form-group"><label>{{ form.proxima_cita.label }}</label>{{ form.proxima_cita }}</div></div>
+      </div>
+      <!-- Signos vitales -->
+      <hr><h6 class="font-weight-bold text-primary mb-3">Signos Vitales</h6>
+      <div class="row">
+        <div class="col-md-2"><div class="form-group"><label>{{ form.peso_kg.label }}</label>{{ form.peso_kg }}</div></div>
+        <div class="col-md-2"><div class="form-group"><label>{{ form.talla_cm.label }}</label>{{ form.talla_cm }}</div></div>
+        <div class="col-md-2"><div class="form-group"><label>{{ form.temperatura.label }}</label>{{ form.temperatura }}</div></div>
+        <div class="col-md-3"><div class="form-group"><label>{{ form.frecuencia_cardiaca.label }}</label>{{ form.frecuencia_cardiaca }}</div></div>
+        <div class="col-md-3"><div class="form-group"><label>{{ form.saturacion_oxigeno.label }}</label>{{ form.saturacion_oxigeno }}</div></div>
+      </div>
+      <!-- Anamnesis y Examen -->
+      <hr><h6 class="font-weight-bold text-primary mb-3">Evaluación Clínica</h6>
+      <div class="row">
+        <div class="col-md-6"><div class="form-group"><label>{{ form.motivo_consulta.label }}</label>{{ form.motivo_consulta }}</div></div>
+        <div class="col-md-6"><div class="form-group"><label>{{ form.anamnesis.label }}</label>{{ form.anamnesis }}</div></div>
+        <div class="col-md-6"><div class="form-group"><label>{{ form.examen_fisico.label }}</label>{{ form.examen_fisico }}</div></div>
+        <div class="col-md-6"><div class="form-group"><label>{{ form.diagnostico.label }}</label>{{ form.diagnostico }}</div></div>
+        <div class="col-md-6"><div class="form-group"><label>{{ form.indicaciones.label }}</label>{{ form.indicaciones }}</div></div>
+        <div class="col-md-6"><div class="form-group"><label>{{ form.receta.label }}</label>{{ form.receta }}</div></div>
+      </div>
+      <hr>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Guardar</button>
+      <a href="{% url 'historial:lista' %}" class="btn btn-secondary ml-2">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

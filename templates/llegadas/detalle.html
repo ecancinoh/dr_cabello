@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Llegada – Detalle{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-door-open mr-2 text-primary"></i>Detalle de Llegada</h1>
+  <div>
+    <a href="{% url 'llegadas:editar' llegada.pk %}" class="btn btn-warning btn-sm mr-1"><i class="fas fa-edit mr-1"></i> Editar</a>
+    <a href="{% url 'llegadas:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+  </div>
+</div>
+<div class="card shadow mb-4">
+  <div class="card-body">
+    <table class="table table-sm table-borderless">
+      <tr><th>Paciente</th><td>{{ llegada.reserva.paciente.nombre_paciente }}</td></tr>
+      <tr><th>Reserva</th><td>{{ llegada.reserva }}</td></tr>
+      <tr><th>Hora Llegada</th><td>{{ llegada.hora_llegada|date:"d/m/Y H:i" }}</td></tr>
+      <tr><th>Hora Atención</th><td>{{ llegada.hora_atencion|date:"d/m/Y H:i"|default:"–" }}</td></tr>
+      <tr><th>Hora Salida</th><td>{{ llegada.hora_salida|date:"d/m/Y H:i"|default:"–" }}</td></tr>
+      <tr><th>Estado</th><td>{{ llegada.get_estado_display }}</td></tr>
+      <tr><th>Registrado por</th><td>{{ llegada.registrado_por.get_full_name|default:"–" }}</td></tr>
+      <tr><th>Observaciones</th><td>{{ llegada.observaciones|default:"–" }}</td></tr>
+    </table>
+  </div>
+</div>
+{% endblock %}
