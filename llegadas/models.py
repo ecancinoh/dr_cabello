@@ -20,10 +20,8 @@ class Llegada(models.Model):
     # ---------------------------
     TIPO_LLEGADA_CHOICES = [
         ('CONTROL', 'Control'),
-        ('URGENCIA', 'Urgencia'),
-        ('DERIVACION', 'Derivación'),
-        ('PRIMERA_VEZ', 'Primera vez'),
-        ('OTRA', 'Otra'),
+        ('ENFERMEDAD', 'Enfermedad'),
+        ('CONTROL_ENFERMEDAD', 'Control de Enfermedad'),
     ]
 
     ETAPA_CHOICES = [

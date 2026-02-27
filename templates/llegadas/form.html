@@ -29,7 +29,10 @@
         </div>
         <div class="col-md-5">
           <div class="form-group">
-            <label>{{ form.nombre.label }}</label>
+            <label>
+              {{ form.nombre.label }}
+              <span id="rut-badge" class="ml-2" style="display:none;"></span>
+            </label>
             {{ form.nombre }}
             {% if form.nombre.errors %}<small class="text-danger">{{ form.nombre.errors.0 }}</small>{% endif %}
           </div>
@@ -132,4 +135,43 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function ($) {
+  var BUSCAR_URL = "{% url 'llegadas:buscar_rut' %}";
+
+  function buscarPaciente() {
+    var rut    = $('#id_rut_numero').val().trim();
+    var dv     = $('#id_rut_dv').val().trim();
+    var $nombre = $('#id_nombre');
+    var $badge  = $('#rut-badge');
+
+    if (!rut || !dv) {
+      $badge.hide();
+      return;
+    }
+
+    $.getJSON(BUSCAR_URL, { rut_numero: rut, rut_dv: dv }, function (data) {
+      if (data.encontrado) {
+        $nombre.val(data.nombre).prop('readonly', true).addClass('bg-light');
+        $badge.html('<span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i>Paciente encontrado</span>').show();
+      } else {
+        $nombre.prop('readonly', false).removeClass('bg-light');
+        $badge.html('<span class="badge badge-secondary"><i class="fas fa-user-plus mr-1"></i>Paciente nuevo</span>').show();
+      }
+    });
+  }
+
+  /* Disparar al salir del campo DV o al escribir en cualquiera de los dos */
+  $('#id_rut_dv').on('blur', buscarPaciente);
+  $('#id_rut_numero').on('blur', buscarPaciente);
+
+  /* Si al cargar la página ya hay valores (modo edición), limpiar readonly */
+  {% if not objeto %}
+  $('#id_nombre').prop('readonly', false);
+  {% endif %}
+}(jQuery));
+</script>
 {% endblock %}

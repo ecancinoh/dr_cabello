@@ -1,9 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from django.db.models import Q
 from .models import Llegada
 from .forms import LlegadaForm
+from pacientes.models import Paciente
+
+
+@login_required
+def buscar_paciente_rut(request):
+    """Endpoint AJAX: devuelve nombre del paciente dado rut_numero + rut_dv."""
+    rut_numero = request.GET.get('rut_numero', '').strip()
+    rut_dv = request.GET.get('rut_dv', '').strip()
+    if rut_numero and rut_dv:
+        try:
+            paciente = Paciente.objects.get(
+                rut_numero=rut_numero,
+                rut_dv__iexact=rut_dv,
+                activo=True
+            )
+            return JsonResponse({'encontrado': True, 'nombre': paciente.nombre_paciente})
+        except Paciente.DoesNotExist:
+            pass
+    return JsonResponse({'encontrado': False, 'nombre': ''})
 
 
 @login_required
