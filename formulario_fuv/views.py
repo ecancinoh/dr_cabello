@@ -2,8 +2,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.http import JsonResponse
 from .models import EvaluacionSalud
 from .forms import EvaluacionSaludForm
+from pacientes.models import Paciente
+
+
+@login_required
+def buscar_paciente_run(request):
+    run_numero = request.GET.get('run_numero', '').strip()
+    run_dv = request.GET.get('run_dv', '').strip()
+    if run_numero and run_dv:
+        try:
+            paciente = Paciente.objects.get(
+                rut_numero=run_numero, rut_dv__iexact=run_dv, activo=True
+            )
+            return JsonResponse({'encontrado': True, 'nombre': paciente.nombre_paciente})
+        except Paciente.DoesNotExist:
+            pass
+    return JsonResponse({'encontrado': False, 'nombre': ''})
 
 
 @login_required

@@ -32,6 +32,7 @@
           <div class="form-group">
             <label>{{ form.nombres_apellidos.label }}</label>
             {{ form.nombres_apellidos }}
+            <div id="run-badge" style="display:none" class="mt-1"></div>
             {% if form.nombres_apellidos.errors %}<small class="text-danger">{{ form.nombres_apellidos.errors.0 }}</small>{% endif %}
           </div>
         </div>
@@ -129,4 +130,38 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function ($) {
+  var BUSCAR_URL = "{% url 'formulario_fuv:buscar_run' %}";
+
+  function buscarPaciente() {
+    var run     = $('#id_run_numero').val().trim();
+    var dv      = $('#id_run_dv').val().trim();
+    var $nombre = $('#id_nombres_apellidos');
+    var $badge  = $('#run-badge');
+
+    if (!run || !dv) { $badge.hide(); return; }
+
+    $.getJSON(BUSCAR_URL, { run_numero: run, run_dv: dv }, function (data) {
+      if (data.encontrado) {
+        $nombre.val(data.nombre).prop('readonly', true).addClass('bg-light');
+        $badge.html('<span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i>Paciente encontrado</span>').show();
+      } else {
+        $nombre.prop('readonly', false).removeClass('bg-light');
+        $badge.html('<span class="badge badge-secondary"><i class="fas fa-user-plus mr-1"></i>Paciente nuevo / no registrado</span>').show();
+      }
+    });
+  }
+
+  $('#id_run_dv').on('blur', buscarPaciente);
+  $('#id_run_numero').on('blur', buscarPaciente);
+
+  {% if not objeto %}
+  $('#id_nombres_apellidos').prop('readonly', false);
+  {% endif %}
+}(jQuery));
+</script>
 {% endblock %}
