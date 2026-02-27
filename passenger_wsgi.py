@@ -4,6 +4,8 @@ Este archivo es requerido por cPanel para ejecutar la aplicación Django.
 """
 import sys
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Agrega el directorio del proyecto al path de Python
 sys.path.insert(0, os.path.dirname(__file__))
