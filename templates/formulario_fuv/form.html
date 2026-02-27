@@ -148,6 +148,9 @@
     $.getJSON(BUSCAR_URL, { run_numero: run, run_dv: dv }, function (data) {
       if (data.encontrado) {
         $nombre.val(data.nombre).prop('readonly', true).addClass('bg-light');
+        if (data.fecha_nacimiento) $('#id_fecha_nacimiento').val(data.fecha_nacimiento);
+        if (data.peso_kg)          $('#id_peso_kg').val(data.peso_kg);
+        if (data.talla_cm)         $('#id_talla_cm').val(data.talla_cm);
         $badge.html('<span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i>Paciente encontrado</span>').show();
       } else {
         $nombre.prop('readonly', false).removeClass('bg-light');

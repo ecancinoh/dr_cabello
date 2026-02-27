@@ -14,13 +14,19 @@ def buscar_paciente_run(request):
     run_dv = request.GET.get('run_dv', '').strip()
     if run_numero and run_dv:
         try:
-            paciente = Paciente.objects.get(
+            p = Paciente.objects.get(
                 rut_numero=run_numero, rut_dv__iexact=run_dv, activo=True
             )
-            return JsonResponse({'encontrado': True, 'nombre': paciente.nombre_paciente})
+            return JsonResponse({
+                'encontrado': True,
+                'nombre': p.nombre_paciente,
+                'fecha_nacimiento': p.fecha_nacimiento.strftime('%Y-%m-%d') if p.fecha_nacimiento else '',
+                'peso_kg': str(p.peso_kg) if p.peso_kg is not None else '',
+                'talla_cm': str(p.talla_cm) if p.talla_cm is not None else '',
+            })
         except Paciente.DoesNotExist:
             pass
-    return JsonResponse({'encontrado': False, 'nombre': ''})
+    return JsonResponse({'encontrado': False})
 
 
 @login_required
