@@ -42,6 +42,19 @@ class Paciente(models.Model):
         ('O', 'Otro'),
         ('N', 'Prefiere no decir'),
     ]
+    NACIONALIDAD_CHOICES = [
+        ('CHILENA',      'Chilena'),
+        ('VENEZOLANA',   'Venezolana'),
+        ('PERUANA',      'Peruana'),
+        ('HAITIANA',     'Haitiana'),
+        ('COLOMBIANA',   'Colombiana'),
+        ('BOLIVIANA',    'Boliviana'),
+        ('ARGENTINA',    'Argentina'),
+        ('ECUATORIANA',  'Ecuatoriana'),
+        ('DOMINICANA',   'Dominicana'),
+        ('CUBANA',       'Cubana'),
+        ('OTRA',         'Otra'),
+    ]
     COMUNA_CHOICES = [
         # Provincia de Cachapoal
         ('RANCAGUA', 'Rancagua'),
@@ -88,6 +101,7 @@ class Paciente(models.Model):
     rut_dv = models.CharField('DV', max_length=1, validators=[rut_dv_validator], help_text='0-9 o K')
     nombre_paciente = models.CharField('Nombre Paciente', max_length=150)
     sexo = models.CharField('Sexo', max_length=1, choices=SEXO_CHOICES, blank=True, null=True)
+    nacionalidad = models.CharField('Nacionalidad', max_length=20, choices=NACIONALIDAD_CHOICES, blank=True, null=True)
     direccion = models.CharField('Dirección', max_length=255, blank=True, null=True)
     comuna = models.CharField('Comuna', max_length=50, choices=COMUNA_CHOICES, blank=True, null=True)
     ciudad = models.CharField('Ciudad', max_length=100, blank=True, null=True)

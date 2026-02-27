@@ -149,6 +149,7 @@
       if (data.encontrado) {
         $nombre.val(data.nombre).prop('readonly', true).addClass('bg-light');
         if (data.sexo)             $('#id_sexo').val(data.sexo);
+        if (data.nacionalidad)     $('#id_nacionalidad').val(data.nacionalidad);
         if (data.fecha_nacimiento) $('#id_fecha_nacimiento').val(data.fecha_nacimiento);
         if (data.peso_kg)          $('#id_peso_kg').val(data.peso_kg);
         if (data.talla_cm)         $('#id_talla_cm').val(data.talla_cm);
