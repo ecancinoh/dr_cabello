@@ -16,7 +16,7 @@ class LlegadaForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'tipo_llegada': forms.Select(attrs={'class': 'form-control'}),
             'etapa': forms.Select(attrs={'class': 'form-control'}),
-            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%Y-%m-%d'),
             'edad': forms.NumberInput(attrs={'class': 'form-control'}),
             'peso_kg': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'talla_cm': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),

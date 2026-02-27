@@ -14,7 +14,7 @@ class PacienteForm(forms.ModelForm):
             'activo',
         ]
         widgets = {
-            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%Y-%m-%d'),
             'rut_numero': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 12345678'}),
             'rut_dv': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'K'}),
             'nombre_paciente': forms.TextInput(attrs={'class': 'form-control'}),

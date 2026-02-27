@@ -14,7 +14,7 @@ class ReservaForm(forms.ModelForm):
         widgets = {
             'paciente': forms.Select(attrs={'class': 'form-select'}),
             'medico': forms.Select(attrs={'class': 'form-select'}),
-            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%Y-%m-%d'),
             'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
             'tipo_consulta': forms.Select(attrs={'class': 'form-select'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
