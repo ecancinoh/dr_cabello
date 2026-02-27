@@ -20,6 +20,7 @@ def buscar_paciente_run(request):
             return JsonResponse({
                 'encontrado': True,
                 'nombre': p.nombre_paciente,
+                'sexo': p.sexo or '',
                 'fecha_nacimiento': p.fecha_nacimiento.strftime('%Y-%m-%d') if p.fecha_nacimiento else '',
                 'peso_kg': str(p.peso_kg) if p.peso_kg is not None else '',
                 'talla_cm': str(p.talla_cm) if p.talla_cm is not None else '',

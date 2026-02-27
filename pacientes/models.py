@@ -36,6 +36,12 @@ class Paciente(models.Model):
     RH_CHOICES = [
         ('+', 'Rh +'), ('-', 'Rh -'),
     ]
+    SEXO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino'),
+        ('O', 'Otro'),
+        ('N', 'Prefiere no decir'),
+    ]
     COMUNA_CHOICES = [
         # Provincia de Cachapoal
         ('RANCAGUA', 'Rancagua'),
@@ -81,6 +87,7 @@ class Paciente(models.Model):
     rut_numero = models.CharField('RUT (número)', max_length=8, validators=[rut_numero_validator], help_text='Sin puntos ni guión. Ej: 12345678')
     rut_dv = models.CharField('DV', max_length=1, validators=[rut_dv_validator], help_text='0-9 o K')
     nombre_paciente = models.CharField('Nombre Paciente', max_length=150)
+    sexo = models.CharField('Sexo', max_length=1, choices=SEXO_CHOICES, blank=True, null=True)
     direccion = models.CharField('Dirección', max_length=255, blank=True, null=True)
     comuna = models.CharField('Comuna', max_length=50, choices=COMUNA_CHOICES, blank=True, null=True)
     ciudad = models.CharField('Ciudad', max_length=100, blank=True, null=True)

@@ -31,6 +31,7 @@
         <table class="table table-sm table-borderless">
           <tr><th>RUT</th><td>{{ paciente.rut_completo }}</td></tr>
           <tr><th>Nombre</th><td>{{ paciente.nombre_paciente }}</td></tr>
+          <tr><th>Sexo</th><td>{{ paciente.get_sexo_display|default:"–" }}</td></tr>
           <tr><th>Nacimiento</th><td>{{ paciente.fecha_nacimiento|date:"d/m/Y"|default:"–" }}</td></tr>
           <tr><th>Celular</th><td>{{ paciente.celular|default:"–" }}</td></tr>
           <tr><th>Dirección</th><td>{{ paciente.direccion|default:"–" }}</td></tr>
