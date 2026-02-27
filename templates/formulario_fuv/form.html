@@ -6,76 +6,125 @@
   <a href="{% url 'formulario_fuv:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
 </div>
 <div class="card shadow mb-4">
-  <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Formulario Único Valorización de Salud (FUV)</h6></div>
+  <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Formulario Único de Valorización (FUV)</h6></div>
   <div class="card-body">
     <form method="post" novalidate>
       {% csrf_token %}
+
       <!-- Identificación -->
-      <div class="row">
-        <div class="col-md-4"><div class="form-group"><label>{{ form.paciente.label }}</label>{{ form.paciente }}</div></div>
-        <div class="col-md-4"><div class="form-group"><label>{{ form.historial.label }}</label>{{ form.historial }}</div></div>
-        <div class="col-md-2"><div class="form-group"><label>{{ form.fecha_evaluacion.label }}</label>{{ form.fecha_evaluacion }}</div></div>
-        <div class="col-md-2"><div class="form-group"><label>{{ form.proxima_control.label }}</label>{{ form.proxima_control }}</div></div>
-      </div>
-      <!-- Antropometría -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Datos Antropométricos</h6>
-      <div class="row">
-        <div class="col-md-2"><div class="form-group"><label>{{ form.edad_meses.label }}</label>{{ form.edad_meses }}</div></div>
-        <div class="col-md-2"><div class="form-group"><label>{{ form.peso_kg.label }}</label>{{ form.peso_kg }}</div></div>
-        <div class="col-md-2"><div class="form-group"><label>{{ form.talla_cm.label }}</label>{{ form.talla_cm }}</div></div>
-        <div class="col-md-2"><div class="form-group"><label>{{ form.imc.label }}</label>{{ form.imc }}</div></div>
-        <div class="col-md-4"><div class="form-group"><label>{{ form.perimetro_cefalico.label }}</label>{{ form.perimetro_cefalico }}</div></div>
-      </div>
-      <!-- Desarrollo psicomotor -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Desarrollo Psicomotor</h6>
-      <div class="row">
-        <div class="col-md-4"><div class="form-group"><label>{{ form.dpm_resultado.label }}</label>{{ form.dpm_resultado }}</div></div>
-        <div class="col-md-8"><div class="form-group"><label>{{ form.dpm_observaciones.label }}</label>{{ form.dpm_observaciones }}</div></div>
-      </div>
-      <!-- Alimentación -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Alimentación</h6>
+      <h6 class="font-weight-bold text-primary mb-3">Identificación</h6>
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
-            <div class="custom-control custom-checkbox">
-              {{ form.lactancia_materna }}
-              <label class="custom-control-label" for="{{ form.lactancia_materna.id_for_label }}">{{ form.lactancia_materna.label }}</label>
-            </div>
-            <div class="custom-control custom-checkbox mt-2">
-              {{ form.alimentacion_complementaria }}
-              <label class="custom-control-label" for="{{ form.alimentacion_complementaria.id_for_label }}">{{ form.alimentacion_complementaria.label }}</label>
-            </div>
+            <label>{{ form.run_numero.label }}</label>
+            {{ form.run_numero }}
+            {% if form.run_numero.errors %}<small class="text-danger">{{ form.run_numero.errors.0 }}</small>{% endif %}
           </div>
         </div>
-        <div class="col-md-9"><div class="form-group"><label>{{ form.alimentacion_observaciones.label }}</label>{{ form.alimentacion_observaciones }}</div></div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>{{ form.run_dv.label }}</label>
+            {{ form.run_dv }}
+            {% if form.run_dv.errors %}<small class="text-danger">{{ form.run_dv.errors.0 }}</small>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>{{ form.nombres_apellidos.label }}</label>
+            {{ form.nombres_apellidos }}
+            {% if form.nombres_apellidos.errors %}<small class="text-danger">{{ form.nombres_apellidos.errors.0 }}</small>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.sexo.label }}</label>
+            {{ form.sexo }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.fecha_nacimiento.label }}</label>
+            {{ form.fecha_nacimiento }}
+          </div>
+        </div>
       </div>
-      <!-- Vacunas -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Vacunas</h6>
       <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.edad_anios_meses.label }}</label>
+            {{ form.edad_anios_meses }}
+          </div>
+        </div>
         <div class="col-md-3">
           <div class="form-group">
-            <div class="custom-control custom-checkbox">
-              {{ form.vacunas_al_dia }}
-              <label class="custom-control-label" for="{{ form.vacunas_al_dia.id_for_label }}">{{ form.vacunas_al_dia.label }}</label>
-            </div>
+            <label>{{ form.nacionalidad.label }}</label>
+            {{ form.nacionalidad }}
           </div>
         </div>
-        <div class="col-md-9"><div class="form-group"><label>{{ form.vacunas_observaciones.label }}</label>{{ form.vacunas_observaciones }}</div></div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.lengua_familia_origen.label }}</label>
+            {{ form.lengua_familia_origen }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.lengua_habitual.label }}</label>
+            {{ form.lengua_habitual }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.fecha_reevaluacion.label }}</label>
+            {{ form.fecha_reevaluacion }}
+          </div>
+        </div>
       </div>
-      <!-- Exámenes -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Exámenes</h6>
-      <div class="row">
-        <div class="col-md-6"><div class="form-group"><label>{{ form.examenes_solicitados.label }}</label>{{ form.examenes_solicitados }}</div></div>
-        <div class="col-md-6"><div class="form-group"><label>{{ form.examenes_resultados.label }}</label>{{ form.examenes_resultados }}</div></div>
-      </div>
-      <!-- Diagnóstico y Plan -->
-      <hr><h6 class="font-weight-bold text-primary mb-3">Diagnóstico y Plan</h6>
-      <div class="row">
-        <div class="col-md-6"><div class="form-group"><label>{{ form.diagnostico.label }}</label>{{ form.diagnostico }}</div></div>
-        <div class="col-md-6"><div class="form-group"><label>{{ form.indicaciones.label }}</label>{{ form.indicaciones }}</div></div>
-      </div>
+
+      <!-- Estado de Salud General -->
       <hr>
-      <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Guardar FUV</button>
+      <h6 class="font-weight-bold text-primary mb-3">Estado de Salud General</h6>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.peso_kg.label }}</label>
+            {{ form.peso_kg }}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.talla_cm.label }}</label>
+            {{ form.talla_cm }}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.imc.label }}</label>
+            {{ form.imc }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloques Clínicos -->
+      <hr>
+      <h6 class="font-weight-bold text-primary mb-3">Diagnóstico e Indicaciones</h6>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.diagnostico.label }}</label>
+            {{ form.diagnostico }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.indicaciones.label }}</label>
+            {{ form.indicaciones }}
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Guardar</button>
       <a href="{% url 'formulario_fuv:lista' %}" class="btn btn-secondary ml-2">Cancelar</a>
     </form>
   </div>

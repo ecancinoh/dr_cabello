@@ -1,71 +1,127 @@
 from django.db import models
-from django.contrib.auth.models import User
-from pacientes.models import Paciente
-from historial.models import HistorialPaciente
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
 
-class FormularioFUV(models.Model):
+class EvaluacionSalud(models.Model):
     """Formulario Único Valorización de Salud – Chile."""
 
-    RESULTADO_CHOICES = [
-        ('NORMAL', 'Normal'),
-        ('RIESGO', 'Riesgo'),
-        ('RETRASO', 'Retraso'),
+    # ---------------------------
+    # Validadores RUN/RUT (sin puntos)
+    # ---------------------------
+    run_numero_validator = RegexValidator(
+        regex=r"^\d{1,8}$",
+        message="El RUN debe tener entre 1 y 8 dígitos (sin puntos)."
+    )
+    run_dv_validator = RegexValidator(
+        regex=r"^[0-9Kk]{1}$",
+        message="El dígito verificador debe ser 0-9 o K."
+    )
+
+    SEXO_CHOICES = [
+        ("M", "Masculino"),
+        ("F", "Femenino"),
+        ("O", "Otro"),
+        ("N", "Prefiere no decir"),
     ]
 
-    paciente = models.ForeignKey(
-        Paciente,
-        on_delete=models.PROTECT,
-        related_name='formularios_fuv',
-        verbose_name='Paciente'
+    # ---------------------------
+    # Identificación
+    # ---------------------------
+    run_numero = models.CharField(
+        "RUN (número)",
+        max_length=8,
+        validators=[run_numero_validator],
+        help_text="Sin puntos ni guión. Ej: 12345678"
     )
-    historial = models.OneToOneField(
-        HistorialPaciente,
-        on_delete=models.SET_NULL,
-        null=True,
+    run_dv = models.CharField(
+        "DV",
+        max_length=1,
+        validators=[run_dv_validator],
+        help_text="0-9 o K"
+    )
+    nombres_apellidos = models.CharField("Nombres y Apellidos", max_length=200)
+    sexo = models.CharField(
+        "Sexo",
+        max_length=1,
+        choices=SEXO_CHOICES,
         blank=True,
-        related_name='formulario_fuv',
-        verbose_name='Historial Asociado'
+        null=True
     )
-    medico = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
+    fecha_nacimiento = models.DateField("Fecha Nacimiento", blank=True, null=True)
+    edad_anios_meses = models.CharField(
+        "Edad (en años y meses)",
+        max_length=50,
+        blank=True,
         null=True,
-        related_name='formularios_fuv',
-        verbose_name='Médico'
+        help_text="Ej: 3 años 2 meses / 3a 2m"
     )
-    fecha_evaluacion = models.DateField('Fecha de Evaluación')
-    # ---- Datos antropométricos ----
-    edad_meses = models.PositiveSmallIntegerField('Edad (meses)', blank=True, null=True)
-    peso_kg = models.DecimalField('Peso (Kg)', max_digits=5, decimal_places=2, blank=True, null=True)
-    talla_cm = models.DecimalField('Talla (cm)', max_digits=5, decimal_places=2, blank=True, null=True)
-    imc = models.DecimalField('IMC', max_digits=5, decimal_places=2, blank=True, null=True)
-    perimetro_cefalico = models.DecimalField('Perímetro Cefálico (cm)', max_digits=5, decimal_places=2, blank=True, null=True)
-    # ---- Desarrollo psicomotor ----
-    dpm_resultado = models.CharField('Resultado DSM', max_length=20, choices=RESULTADO_CHOICES, blank=True, null=True)
-    dpm_observaciones = models.TextField('Observaciones DSM', blank=True, null=True)
-    # ---- Alimentación ----
-    lactancia_materna = models.BooleanField('Lactancia Materna', default=False)
-    alimentacion_complementaria = models.BooleanField('Alimentación Complementaria', default=False)
-    alimentacion_observaciones = models.TextField('Obs. Alimentación', blank=True, null=True)
-    # ---- Vacunas ----
-    vacunas_al_dia = models.BooleanField('Vacunas al Día', default=False)
-    vacunas_observaciones = models.TextField('Obs. Vacunas', blank=True, null=True)
-    # ---- Exámenes ----
-    examenes_solicitados = models.TextField('Exámenes Solicitados', blank=True, null=True)
-    examenes_resultados = models.TextField('Resultados Exámenes', blank=True, null=True)
-    # ---- Diagnóstico y plan ----
-    diagnostico = models.TextField('Diagnóstico')
-    indicaciones = models.TextField('Indicaciones', blank=True, null=True)
-    proxima_control = models.DateField('Próximo Control', blank=True, null=True)
-    # ---- Metadatos ----
-    creado_en = models.DateTimeField('Creado en', auto_now_add=True)
-    actualizado_en = models.DateTimeField('Actualizado en', auto_now=True)
+    nacionalidad = models.CharField("Nacionalidad", max_length=100, blank=True, null=True)
+    lengua_familia_origen = models.CharField(
+        "Lengua familia de origen",
+        max_length=150,
+        blank=True,
+        null=True
+    )
+    lengua_habitual = models.CharField(
+        "Lengua que usa habitualmente",
+        max_length=150,
+        blank=True,
+        null=True
+    )
+    fecha_reevaluacion = models.DateField("Fecha Reevaluación", blank=True, null=True)
+
+    # ---------------------------
+    # Estado de Salud General
+    # ---------------------------
+    peso_kg = models.DecimalField(
+        "Peso (kg)",
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(500)]
+    )
+    talla_cm = models.DecimalField(
+        "Talla (cm)",
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(250)]
+    )
+    imc = models.DecimalField(
+        "IMC",
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+
+    # ---------------------------
+    # Bloques clínicos
+    # ---------------------------
+    diagnostico = models.TextField("Diagnóstico", blank=True, null=True)
+    indicaciones = models.TextField("Indicaciones", blank=True, null=True)
+
+    # ---------------------------
+    # Metadatos
+    # ---------------------------
+    creado_en = models.DateTimeField("Creado en", auto_now_add=True)
+    actualizado_en = models.DateTimeField("Actualizado en", auto_now=True)
 
     class Meta:
-        verbose_name = 'Formulario FUV'
-        verbose_name_plural = 'Formularios FUV'
-        ordering = ['-fecha_evaluacion']
+        verbose_name = "Evaluación de Salud"
+        verbose_name_plural = "Evaluaciones de Salud"
+        indexes = [
+            models.Index(fields=["run_numero", "run_dv"]),
+            models.Index(fields=["fecha_nacimiento"]),
+            models.Index(fields=["fecha_reevaluacion"]),
+        ]
 
     def __str__(self):
-        return f'FUV – {self.paciente} – {self.fecha_evaluacion}'
+        return f"{self.nombres_apellidos} ({self.run_completo})"
+
+    @property
+    def run_completo(self):
+        return f"{self.run_numero}-{self.run_dv.upper()}"

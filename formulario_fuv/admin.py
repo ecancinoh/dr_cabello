@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import FormularioFUV
+from .models import EvaluacionSalud
 
 
-@admin.register(FormularioFUV)
-class FormularioFUVAdmin(admin.ModelAdmin):
-    list_display = ('paciente', 'fecha_evaluacion', 'dpm_resultado', 'medico')
-    list_filter = ('dpm_resultado', 'vacunas_al_dia', 'lactancia_materna')
-    search_fields = ('paciente__nombre_paciente', 'diagnostico')
+@admin.register(EvaluacionSalud)
+class EvaluacionSaludAdmin(admin.ModelAdmin):
+    list_display = ('nombres_apellidos', 'run_completo', 'sexo', 'fecha_nacimiento', 'fecha_reevaluacion', 'creado_en')
+    list_filter = ('sexo',)
+    search_fields = ('nombres_apellidos', 'run_numero', 'diagnostico')
     readonly_fields = ('creado_en', 'actualizado_en')
-    date_hierarchy = 'fecha_evaluacion'
+    date_hierarchy = 'creado_en'

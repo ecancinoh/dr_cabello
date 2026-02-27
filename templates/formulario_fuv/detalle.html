@@ -1,13 +1,65 @@
 {% extends 'base.html' %}
-{% block title %}FUV – Detalle{% endblock %}
+{% block title %}Evaluación de Salud – Detalle{% endblock %}
 {% block content %}
 <div class="page-header">
-  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-check mr-2 text-primary"></i>Formulario FUV – Detalle</h1>
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-check mr-2 text-primary"></i>Evaluación de Salud – Detalle</h1>
   <div>
-    <a href="{% url 'formulario_fuv:editar' fuv.pk %}" class="btn btn-warning btn-sm mr-1"><i class="fas fa-edit mr-1"></i> Editar</a>
+    <a href="{% url 'formulario_fuv:editar' ev.pk %}" class="btn btn-warning btn-sm mr-1"><i class="fas fa-edit mr-1"></i> Editar</a>
     <a href="{% url 'formulario_fuv:lista' %}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
   </div>
 </div>
+<div class="row">
+  <div class="col-lg-5 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Identificación</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>RUN</th><td><code>{{ ev.run_completo }}</code></td></tr>
+          <tr><th>Nombres y Apellidos</th><td>{{ ev.nombres_apellidos }}</td></tr>
+          <tr><th>Sexo</th><td>{{ ev.get_sexo_display|default:"–" }}</td></tr>
+          <tr><th>Fecha Nacimiento</th><td>{{ ev.fecha_nacimiento|date:"d/m/Y"|default:"–" }}</td></tr>
+          <tr><th>Edad</th><td>{{ ev.edad_anios_meses|default:"–" }}</td></tr>
+          <tr><th>Nacionalidad</th><td>{{ ev.nacionalidad|default:"–" }}</td></tr>
+          <tr><th>Lengua familia origen</th><td>{{ ev.lengua_familia_origen|default:"–" }}</td></tr>
+          <tr><th>Lengua habitual</th><td>{{ ev.lengua_habitual|default:"–" }}</td></tr>
+          <tr><th>Fecha Reevaluación</th><td>{{ ev.fecha_reevaluacion|date:"d/m/Y"|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Estado de Salud General</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Peso</th><td>{{ ev.peso_kg|default:"–" }} kg</td></tr>
+          <tr><th>Talla</th><td>{{ ev.talla_cm|default:"–" }} cm</td></tr>
+          <tr><th>IMC</th><td>{{ ev.imc|default:"–" }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Diagnóstico e Indicaciones</h6></div>
+      <div class="card-body">
+        <h6 class="text-primary">Diagnóstico</h6>
+        <p>{{ ev.diagnostico|linebreaksbr|default:"–" }}</p>
+        <hr>
+        <h6 class="text-primary">Indicaciones</h6>
+        <p>{{ ev.indicaciones|linebreaksbr|default:"–" }}</p>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Metadatos</h6></div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless">
+          <tr><th>Creado en</th><td>{{ ev.creado_en|date:"d/m/Y H:i" }}</td></tr>
+          <tr><th>Actualizado en</th><td>{{ ev.actualizado_en|date:"d/m/Y H:i" }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 <div class="row">
   <div class="col-lg-4 mb-4">
     <div class="card shadow">

@@ -1,36 +1,31 @@
 from django import forms
-from .models import FormularioFUV
+from .models import EvaluacionSalud
 
 
-class FormularioFUVForm(forms.ModelForm):
+class EvaluacionSaludForm(forms.ModelForm):
     class Meta:
-        model = FormularioFUV
+        model = EvaluacionSalud
         fields = [
-            'paciente', 'historial', 'medico', 'fecha_evaluacion',
-            'edad_meses', 'peso_kg', 'talla_cm', 'imc', 'perimetro_cefalico',
-            'dpm_resultado', 'dpm_observaciones',
-            'lactancia_materna', 'alimentacion_complementaria', 'alimentacion_observaciones',
-            'vacunas_al_dia', 'vacunas_observaciones',
-            'examenes_solicitados', 'examenes_resultados',
-            'diagnostico', 'indicaciones', 'proxima_control',
+            'run_numero', 'run_dv', 'nombres_apellidos', 'sexo',
+            'fecha_nacimiento', 'edad_anios_meses', 'nacionalidad',
+            'lengua_familia_origen', 'lengua_habitual', 'fecha_reevaluacion',
+            'peso_kg', 'talla_cm', 'imc',
+            'diagnostico', 'indicaciones',
         ]
         widgets = {
-            'paciente': forms.Select(attrs={'class': 'form-select'}),
-            'historial': forms.Select(attrs={'class': 'form-select'}),
-            'medico': forms.Select(attrs={'class': 'form-select'}),
-            'fecha_evaluacion': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'proxima_control': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'edad_meses': forms.NumberInput(attrs={'class': 'form-control'}),
+            'run_numero': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 12345678'}),
+            'run_dv': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'K', 'maxlength': '1', 'style': 'text-transform:uppercase'}),
+            'nombres_apellidos': forms.TextInput(attrs={'class': 'form-control'}),
+            'sexo': forms.Select(attrs={'class': 'form-control'}),
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'edad_anios_meses': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 3a 2m'}),
+            'nacionalidad': forms.TextInput(attrs={'class': 'form-control'}),
+            'lengua_familia_origen': forms.TextInput(attrs={'class': 'form-control'}),
+            'lengua_habitual': forms.TextInput(attrs={'class': 'form-control'}),
+            'fecha_reevaluacion': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'peso_kg': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'talla_cm': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'imc': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'perimetro_cefalico': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'dpm_resultado': forms.Select(attrs={'class': 'form-select'}),
-            'dpm_observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'alimentacion_observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'vacunas_observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'examenes_solicitados': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'examenes_resultados': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'diagnostico': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'indicaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'diagnostico': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'indicaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }

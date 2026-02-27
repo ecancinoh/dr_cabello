@@ -5,7 +5,6 @@ from pacientes.models import Paciente
 from reservas.models import Reserva
 from llegadas.models import Llegada
 from historial.models import HistorialPaciente
-from formulario_fuv.models import FormularioFUV
 
 
 @login_required
