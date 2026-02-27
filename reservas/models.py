@@ -14,9 +14,8 @@ class Reserva(models.Model):
 
     TIPO_CONSULTA_CHOICES = [
         ('CONTROL', 'Control'),
-        ('MORBILIDAD', 'Morbilidad'),
-        ('URGENCIA', 'Urgencia'),
-        ('PROCEDIMIENTO', 'Procedimiento'),
+        ('ENFERMEDAD', 'Enfermedad'),
+        ('CONTROL_ENFERMEDAD', 'Control de Enfermedad'),
     ]
 
     paciente = models.ForeignKey(
