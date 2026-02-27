@@ -10,7 +10,7 @@
     <h6 class="m-0 font-weight-bold text-primary">Listado de Llegadas</h6>
     <form class="form-inline" method="get">
       <div class="input-group input-group-sm">
-        <input type="text" name="q" class="form-control" placeholder="Buscar paciente..." value="{{ q }}">
+        <input type="text" name="q" class="form-control" placeholder="Buscar nombre o RUT..." value="{{ q }}">
         <div class="input-group-append"><button class="btn btn-primary" type="submit"><i class="fas fa-search fa-sm"></i></button></div>
       </div>
     </form>
@@ -18,27 +18,39 @@
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">
-        <thead><tr><th>#</th><th>Paciente</th><th>Hora Llegada</th><th>Estado</th><th>Registrado por</th><th>Acciones</th></tr></thead>
+        <thead>
+          <tr><th>#</th><th>RUT</th><th>Nombre</th><th>Tipo</th><th>Etapa</th><th>Fecha</th><th>Edad</th><th>Acciones</th></tr>
+        </thead>
         <tbody>
         {% for l in llegadas %}
         <tr>
           <td>{{ forloop.counter }}</td>
-          <td><a href="{% url 'pacientes:detalle' l.reserva.paciente.pk %}">{{ l.reserva.paciente.nombre_paciente }}</a></td>
-          <td>{{ l.hora_llegada|date:"d/m/Y H:i" }}</td>
+          <td>{{ l.rut_completo }}</td>
+          <td><a href="{% url 'llegadas:detalle' l.pk %}">{{ l.nombre }}</a></td>
           <td>
-            {% if l.estado == 'ESPERANDO' %}<span class="badge badge-warning">Esperando</span>
-            {% elif l.estado == 'EN_ATENCION' %}<span class="badge badge-success">En Atención</span>
-            {% else %}<span class="badge badge-secondary">Atendido</span>{% endif %}
+            {% if l.tipo_llegada %}
+              {% if l.tipo_llegada == 'URGENCIA' %}
+                <span class="badge badge-danger">{{ l.get_tipo_llegada_display }}</span>
+              {% elif l.tipo_llegada == 'PRIMERA_VEZ' %}
+                <span class="badge badge-success">{{ l.get_tipo_llegada_display }}</span>
+              {% else %}
+                <span class="badge badge-info">{{ l.get_tipo_llegada_display }}</span>
+              {% endif %}
+            {% else %}–{% endif %}
           </td>
-          <td>{{ l.registrado_por.get_full_name|default:"–" }}</td>
           <td>
-            <a href="{% url 'llegadas:editar' l.pk %}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-            <a href="{% url 'historial:crear' %}?paciente_id={{ l.reserva.paciente.pk }}" class="btn btn-primary btn-sm" title="Nuevo Historial"><i class="fas fa-file-medical"></i></a>
-            <a href="{% url 'llegadas:eliminar' l.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+            {% if l.etapa %}<span class="badge badge-secondary">{{ l.get_etapa_display }}</span>{% else %}–{% endif %}
+          </td>
+          <td>{{ l.fecha|date:"d/m/Y"|default:"–" }}</td>
+          <td>{{ l.edad|default:"–" }}</td>
+          <td>
+            <a href="{% url 'llegadas:detalle' l.pk %}" class="btn btn-info btn-sm" title="Ver"><i class="fas fa-eye"></i></a>
+            <a href="{% url 'llegadas:editar' l.pk %}" class="btn btn-warning btn-sm" title="Editar"><i class="fas fa-edit"></i></a>
+            <a href="{% url 'llegadas:eliminar' l.pk %}" class="btn btn-danger btn-sm" title="Eliminar"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="6" class="text-center text-muted py-3">No se encontraron llegadas.</td></tr>
+        <tr><td colspan="8" class="text-center text-muted py-3">No se encontraron llegadas.</td></tr>
         {% endfor %}
         </tbody>
       </table>

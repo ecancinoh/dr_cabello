@@ -10,19 +10,122 @@
   <div class="card-body">
     <form method="post" novalidate>
       {% csrf_token %}
+
+      <!-- Identificación -->
       <div class="row">
-        <div class="col-md-6">
-          <div class="form-group"><label>{{ form.reserva.label }}</label>{{ form.reserva }}{% if form.reserva.errors %}<small class="text-danger">{{ form.reserva.errors.0 }}</small>{% endif %}</div>
-          <div class="form-group"><label>{{ form.estado.label }}</label>{{ form.estado }}</div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.rut_numero.label }}</label>
+            {{ form.rut_numero }}
+            {% if form.rut_numero.errors %}<small class="text-danger">{{ form.rut_numero.errors.0 }}</small>{% endif %}
+          </div>
         </div>
-        <div class="col-md-6">
-          {% if form.hora_atencion %}
-          <div class="form-group"><label>{{ form.hora_atencion.label }}</label>{{ form.hora_atencion }}</div>
-          <div class="form-group"><label>{{ form.hora_salida.label }}</label>{{ form.hora_salida }}</div>
-          {% endif %}
-          <div class="form-group"><label>{{ form.observaciones.label }}</label>{{ form.observaciones }}</div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>{{ form.rut_dv.label }}</label>
+            {{ form.rut_dv }}
+            {% if form.rut_dv.errors %}<small class="text-danger">{{ form.rut_dv.errors.0 }}</small>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label>{{ form.nombre.label }}</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}<small class="text-danger">{{ form.nombre.errors.0 }}</small>{% endif %}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.fecha.label }}</label>
+            {{ form.fecha }}
+          </div>
         </div>
       </div>
+
+      <!-- Clasificación -->
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.tipo_llegada.label }}</label>
+            {{ form.tipo_llegada }}
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{ form.etapa.label }}</label>
+            {{ form.etapa }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.edad.label }}</label>
+            {{ form.edad }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label>{{ form.peso_kg.label }}</label>
+            {{ form.peso_kg }}
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>{{ form.talla_cm.label }}</label>
+            {{ form.talla_cm }}
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div class="form-group">
+            <label>{{ form.cc_cm.label }}</label>
+            {{ form.cc_cm }}
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <h6 class="font-weight-bold text-primary mb-3">Registro Clínico</h6>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.anamnesis.label }}</label>
+            {{ form.anamnesis }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.examen_fisico.label }}</label>
+            {{ form.examen_fisico }}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.diagnostico.label }}</label>
+            {{ form.diagnostico }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{ form.tratamiento.label }}</label>
+            {{ form.tratamiento }}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>{{ form.control.label }}</label>
+            {{ form.control }}
+          </div>
+        </div>
+      </div>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
       <hr>
       <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Guardar</button>
       <a href="{% url 'llegadas:lista' %}" class="btn btn-secondary ml-2">Cancelar</a>

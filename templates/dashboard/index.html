@@ -41,10 +41,10 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">En Espera</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ en_espera }}</div>
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Llegadas Hoy</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ llegadas_hoy }}</div>
           </div>
-          <div class="col-auto"><i class="fas fa-hourglass-half fa-2x text-gray-300"></i></div>
+          <div class="col-auto"><i class="fas fa-door-open fa-2x text-gray-300"></i></div>
         </div>
       </div>
     </div>
@@ -54,10 +54,10 @@
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">En Atención</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ en_atencion }}</div>
+            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Llegadas</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_llegadas }}</div>
           </div>
-          <div class="col-auto"><i class="fas fa-stethoscope fa-2x text-gray-300"></i></div>
+          <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@
               <td><span class="badge badge-info">{{ r.get_tipo_consulta_display }}</span></td>
               <td><span class="badge badge-warning">{{ r.get_estado_display }}</span></td>
               <td>
-                <a href="{% url 'llegadas:registrar' %}?reserva_id={{ r.pk }}" class="btn btn-xs btn-success btn-sm">
+                <a href="{% url 'llegadas:registrar' %}" class="btn btn-xs btn-success btn-sm">
                   <i class="fas fa-door-open"></i> Registrar
                 </a>
               </td>
@@ -110,20 +110,26 @@
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-sm table-hover mb-0">
-            <thead><tr><th>Paciente</th><th>Hora</th><th>Estado</th></tr></thead>
+            <thead><tr><th>RUT</th><th>Nombre</th><th>Tipo</th><th>Etapa</th><th>Hora</th></tr></thead>
             <tbody>
             {% for l in llegadas_recientes %}
             <tr>
-              <td>{{ l.reserva.paciente.nombre_paciente }}</td>
-              <td>{{ l.hora_llegada|time:"H:i" }}</td>
+              <td>{{ l.rut_completo }}</td>
+              <td><a href="{% url 'llegadas:detalle' l.pk %}">{{ l.nombre }}</a></td>
               <td>
-                {% if l.estado == 'ESPERANDO' %}<span class="badge badge-warning">Esperando</span>
-                {% elif l.estado == 'EN_ATENCION' %}<span class="badge badge-success">En Atención</span>
-                {% else %}<span class="badge badge-secondary">Atendido</span>{% endif %}
+                {% if l.tipo_llegada %}
+                  <span class="badge badge-info">{{ l.get_tipo_llegada_display }}</span>
+                {% else %}–{% endif %}
               </td>
+              <td>
+                {% if l.etapa %}
+                  <span class="badge badge-secondary">{{ l.get_etapa_display }}</span>
+                {% else %}–{% endif %}
+              </td>
+              <td>{{ l.creado_en|time:"H:i" }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="3" class="text-center text-muted py-3">Sin llegadas hoy.</td></tr>
+            <tr><td colspan="5" class="text-center text-muted py-3">Sin llegadas hoy.</td></tr>
             {% endfor %}
             </tbody>
           </table>

@@ -1,38 +1,99 @@
 from django.db import models
-from django.contrib.auth.models import User
-from reservas.models import Reserva
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
 
 class Llegada(models.Model):
-    ESTADO_CHOICES = [
-        ('ESPERANDO', 'Esperando'),
-        ('EN_ATENCION', 'En Atención'),
-        ('ATENDIDO', 'Atendido'),
+    # ---------------------------
+    # Validadores RUT
+    # ---------------------------
+    rut_numero_validator = RegexValidator(
+        regex=r'^\d{1,8}$',
+        message='El RUT debe tener entre 1 y 8 dígitos (sin puntos).'
+    )
+    rut_dv_validator = RegexValidator(
+        regex=r'^[0-9Kk]{1}$',
+        message='El dígito verificador debe ser 0-9 o K.'
+    )
+
+    # ---------------------------
+    # Choices
+    # ---------------------------
+    TIPO_LLEGADA_CHOICES = [
+        ('CONTROL', 'Control'),
+        ('URGENCIA', 'Urgencia'),
+        ('DERIVACION', 'Derivación'),
+        ('PRIMERA_VEZ', 'Primera vez'),
+        ('OTRA', 'Otra'),
     ]
 
-    reserva = models.OneToOneField(
-        Reserva,
-        on_delete=models.PROTECT,
-        related_name='llegada',
-        verbose_name='Reserva'
+    ETAPA_CHOICES = [
+        ('INGRESO', 'Ingreso'),
+        ('EVALUACION', 'Evaluación'),
+        ('TRATAMIENTO', 'Tratamiento'),
+        ('ALTA', 'Alta'),
+        ('OTRA', 'Otra'),
+    ]
+
+    # ---------------------------
+    # Campos
+    # ---------------------------
+    rut_numero = models.CharField(
+        'RUT (número)', max_length=8,
+        validators=[rut_numero_validator],
+        help_text='Sin puntos ni guión. Ej: 12345678'
     )
-    hora_llegada = models.DateTimeField('Hora de Llegada', auto_now_add=True)
-    hora_atencion = models.DateTimeField('Hora de Atención', blank=True, null=True)
-    hora_salida = models.DateTimeField('Hora de Salida', blank=True, null=True)
-    estado = models.CharField('Estado', max_length=20, choices=ESTADO_CHOICES, default='ESPERANDO')
-    registrado_por = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='llegadas_registradas',
-        verbose_name='Registrado por'
+    rut_dv = models.CharField(
+        'DV', max_length=1,
+        validators=[rut_dv_validator],
+        help_text='0-9 o K'
     )
-    observaciones = models.TextField('Observaciones', blank=True, null=True)
+    nombre = models.CharField('Nombre', max_length=150)
+    tipo_llegada = models.CharField(
+        'Tipo Llegada', max_length=30,
+        choices=TIPO_LLEGADA_CHOICES, blank=True, null=True
+    )
+    etapa = models.CharField(
+        'Etapa', max_length=30,
+        choices=ETAPA_CHOICES, blank=True, null=True
+    )
+    fecha = models.DateField('Fecha', blank=True, null=True)
+    edad = models.PositiveSmallIntegerField(
+        'Edad', blank=True, null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(150)]
+    )
+    peso_kg = models.DecimalField(
+        'Peso (Kg)', max_digits=6, decimal_places=2, blank=True, null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(500)]
+    )
+    talla_cm = models.DecimalField(
+        'Talla (cm)', max_digits=6, decimal_places=2, blank=True, null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(250)]
+    )
+    cc_cm = models.DecimalField(
+        'C.C. (cm)', max_digits=6, decimal_places=2, blank=True, null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    anamnesis = models.TextField('Anamnesis', blank=True, null=True)
+    examen_fisico = models.TextField('Examen Físico', blank=True, null=True)
+    diagnostico = models.TextField('Diagnóstico', blank=True, null=True)
+    tratamiento = models.TextField('Tratamiento', blank=True, null=True)
+    control = models.TextField('Control', blank=True, null=True)
+    creado_en = models.DateTimeField('Creado en', auto_now_add=True)
+    actualizado_en = models.DateTimeField('Actualizado en', auto_now=True)
 
     class Meta:
         verbose_name = 'Llegada'
         verbose_name_plural = 'Llegadas'
-        ordering = ['-hora_llegada']
+        ordering = ['-creado_en']
+        indexes = [
+            models.Index(fields=['rut_numero', 'rut_dv']),
+            models.Index(fields=['fecha']),
+            models.Index(fields=['nombre']),
+        ]
 
     def __str__(self):
-        return f'Llegada de {self.reserva.paciente} – {self.hora_llegada.strftime("%d/%m/%Y %H:%M")}'
+        return f'{self.nombre} - {self.rut_completo} ({self.fecha or "sin fecha"})'
+
+    @property
+    def rut_completo(self):
+        return f'{self.rut_numero}-{self.rut_dv.upper()}'
